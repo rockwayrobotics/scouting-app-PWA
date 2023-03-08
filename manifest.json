@@ -1,0 +1,20 @@
+{
+	"short_name": "Scouting",
+	"name": "Rockway Robotics Scouting App",
+	"icons": [
+		{
+			"src": "/images/icons-vector.svg",
+			"type": "image/svg+xml",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/images/icons-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"background_color": "#fbf1c7",
+	"theme_color": "#cc241d",
+	"display": "fullscreen",
+	"start_url": "/index.html"
+}
