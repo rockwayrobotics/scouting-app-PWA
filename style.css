@@ -1,0 +1,108 @@
+body, .input {
+    font-size: 16px;
+	text-align: center;
+	line-height: 1.5;
+    margin: 0;
+
+	background-color: #fbf1c7;
+	color: #282828;
+}
+
+.label {
+    display: block;
+    margin: 0 0 5px;
+	font-weight: bold;
+}
+
+input {
+  background-color: #eee;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 13em;
+  border-radius: 1rem;
+  color: lightcoral;
+  box-shadow: 0 0.4rem #dfd9d9;
+  cursor: pointer;
+  outline: none;
+}
+
+input:focus, input:focus-visible {
+  outline-color: lightcoral;
+  border: 2px solid lightcoral;
+}
+
+
+button {
+ padding: 17px 40px;
+ border-radius: 10px;
+ border: 0;
+ background-color: rgb(255, 56, 86);
+ letter-spacing: 1.5px;
+ font-size: 15px;
+ transition: all .3s ease;
+ box-shadow: rgb(201, 46, 70) 0px 10px 0px 0px;
+ color: hsl(0, 0%, 100%);
+}
+
+button:hover {
+ box-shadow: rgb(201, 46, 70) 0px 7px 0px 0px;
+}
+
+button:active {
+ background-color: rgb(255, 56, 86);
+ /*50, 168, 80*/
+ box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
+ transform: translateY(5px);
+ transition: 200ms;
+}
+
+a {
+	color: #cc241d;
+	padding: 10px;
+
+	border-radius: 12px;
+background: #cc241d;
+box-shadow:  9px 9px 18px #b11f19,
+             -9px -9px 18px #e72921;
+}
+
+a:hover {
+	color: #9d0006;
+	padding: 10px;
+}
+
+nav ul {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	row-gap: 20px;
+}
+
+nav ul li {
+	flex-basis: 30%;
+	list-style: none;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 15em;
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 20em;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+}
