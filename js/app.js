@@ -32,9 +32,9 @@ var NavBar = {
 	view: function() {
 		return m("nav",
 			m("ul",
-				m("li", m("button", { onclick: "window.location.href='#!/scout/pit'" }, "Pit Scout" )),
-				m("li", m("button", { onclick: "window.location.href='#!/scout/match'" }, "Match Scout" )),
-				m("li", m("button", { onclick: "window.location.href='#!/driver'" }, "Driver Meeting" ))
+				m("li", m("a", { class: "button", href: "#!/scout/pit" }, "Pit Scout" )),
+				m("li", m("a", { class: "button", href: "#!/scout/match" }, "Match Scout" )),
+				m("li", m("a", { class: "button", href: "#!/driver" }, "Driver Meeting" ))
 			))
 	}
 }
@@ -43,7 +43,7 @@ var NavBar = {
 var Splash = {
     view: function() {
         return m("div", { class: "center" },
-			m("button", { onclick: "window.location.href='#!/scout'"}, "Scout a Match!")
+			m("a", { class: "button", href: "#!/scout"}, "Scout a Match!")
 		)}
 }
 
