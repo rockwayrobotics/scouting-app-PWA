@@ -58,6 +58,10 @@ input:focus, input:focus-visible {
  transition: 200ms;
 }
 
+nav {
+	margin-top: 20px;
+}
+
 nav ul {
 	display: flex;
 	flex-direction: row;
