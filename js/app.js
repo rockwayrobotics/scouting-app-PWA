@@ -32,6 +32,7 @@ var Match = {
 	load: function() {
 		return Match.team;
 	}
+	
 }
 
 // Components
@@ -72,7 +73,7 @@ var ScoutSetup = {
 						console.log("Team " + Match.team);
 					}
 				}),
-				m("button.button[type=submit]", "Continue"),
+				m("button.button[type=submit]", "Start Scouting!"),
 			])
 		)
 	}
@@ -102,10 +103,22 @@ var ScoutPit = {
 	}
 }
 
+var DriverMeeting = {
+	view: function() {
+		return m("div", { class: "main" },
+			m(NavBar),
+			m("div", [
+				m("h1", "Driver Meeting"),
+				m("h2", "Team #"+Match.team),
+			]),
+		)
+	}
+}
+
 m.route(root, "/splash", {
     "/splash": Splash,
 	"/scout": ScoutSetup,
 	"/scout/pit": ScoutPit,
 	"/scout/match": ScoutMatch,
-	// "/driver": DriverMeeting,
+	"/driver": DriverMeeting,
 })

@@ -70,7 +70,7 @@ nav ul {
 }
 
 nav ul li {
-	flex-basis: 30%;
+	flex-basis: 15%;
 	list-style: none;
 }
 
@@ -95,4 +95,9 @@ form {
 	justify-content: center;
 	align-items: center;
 	gap: 15px;
+}
+
+::selection {
+	background-color: #282828;
+	color: #fbf1c7;
 }
