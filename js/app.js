@@ -4,35 +4,40 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('js/sw.js');
 }
 
-// Open DB
-const dbName = "matches";
-const request = indexedDB.open(dbName, 2);
-
-request.onerror = (event) => {
-	// Generic error handler for all errors targeted at this database's
-	// requests!
-	console.error(`Database error: ${event.target.errorCode}`);
-};
-request.onupgradeneeded = (event) => {
-	const db = event.target.result;
-	const objectStore = db.createObjectStore("match", { keyPath: "time" });
-	objectStore.createIndex("id", "id", { unique: false });
-	objectStore.transaction.oncomplete = (event) => {
-		const matchObjectStore = db
-			.transaction("match", "readwrite")
-			.objectStore("match");
-		matchData.forEach((match) => {
-			matchObjectStore.add(match);
-		});
-	};
-};
-
+// Models
 var Match = {
 	team: 0,
-	load: function() {
-		return Match.team;
+	width: 0.0,
+	swerve: false,
+	tippy: false,
+	autos: "",
+
+	data: {
+		linked_event: "",
+		alliance: "blue",
+		auto: {
+			balance: false,
+			move: false,
+		},
+		teleop: {
+			balance: false,
+		},
+		endgame: {
+			parked: false,
+			score: 0,
+			time: 0,
+		},
+		penalty: {
+			penalty: 0,
+			disabled: false,
+		},
+		misc: {
+			alliance_final_score: 0,
+			cycle_time: 0,
+			pickup_time: 0,
+			comments: "",
+		}
 	}
-	
 }
 
 // Components
@@ -64,7 +69,8 @@ var ScoutSetup = {
 				onsubmit: function(e) {
 					e.preventDefault()
 					window.location.href = "#!/scout/pit";
-				}
+				},
+				class: "setup",
 			}, [
 				m("label.label", "Team #"),
 				m("input.input[type=number][placeholder=8089]", {
@@ -95,9 +101,50 @@ var ScoutPit = {
 	view: function() {
 		return m("div", { class: "main" },
 			m(NavBar),
-			m("div", [
+			m("div", { class: "page" }, [
 				m("h1", "Pit Scouting"),
 				m("h2", "Team #"+Match.team),
+			m("form", {
+				onsubmit: function(e) {
+					e.preventDefault()
+				}
+			}, [m("div", { class: "formBlock" }, [
+				m("label.label", "Robot Width (in)"),
+				m("input.input[type=number][placeholder=0.0]", {
+					value: Match.width,
+					oninput: function(e) {
+						Match.width = e.target.value;
+						console.log("Width: " + Match.width);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Swerve Drive?"),
+				m("input.input[type=checkbox]", {
+					checked: Match.swerve,
+					oninput: function(e) {
+						Match.swerve = e.target.checked;
+						console.log("Swerve: " + Match.swerve);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Tippy?"),
+				m("input.input[type=checkbox]", {
+					checked: Match.tippy,
+					oninput: function(e) {
+						Match.tippy = e.target.checked;
+						console.log("Tippy: " + Match.tippy);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Auto Routine Description"),
+				m("input.input[type=text]", {
+					value: Match.autos,
+					oninput: function(e) {
+						Match.autos = e.target.value;
+						console.log("Autos: " + Match.autos);
+					}
+				})]),
+			]),
 			]),
 		)
 	}
