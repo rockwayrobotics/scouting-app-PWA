@@ -4,6 +4,14 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('js/sw.js');
 }
 
+// Database
+var db = new Dexie("Scouting");
+
+db.version(1).stores({
+	teams: "&number",
+	matches: "++match_number, linked_team"
+});
+
 // Functions
 function convertObjectToBinary(obj) {
     let output = '',
@@ -42,6 +50,17 @@ var Team = {
 	swerve: false,
 	tippy: false,
 
+	save: function() {
+		db.teams.put({
+			number: parseInt(Team.number),
+			name: Team.name,
+			width: parseFloat(Team.width),
+			autos: Team.autos,
+			swerve: Team.swerve,
+			tippy: Team.tippy,
+		});
+	},
+
 	qr: function() {
 		// gzip data
 		var binary = convertObjectToBinary(Team);
@@ -78,15 +97,37 @@ var Match = {
 	endgame: {
 		parked: false,
 		score: 0,
-		time: "",
+		time: 0,
 	},
 	penalty: 0,
 	disabled: false,
 
 	alliance_final_score: 0,
-	cycle_time: "",
-	pickup_time: "",
-	comments: "",
+	cycle_time: 0,
+	pickup_time: 0,
+	comments: 0,
+
+	save: function() {
+		var d = new Date();
+		db.matches.put({
+			linked_team: parseInt(Match.linked_team),
+			linked_event: Match.linked_event,
+			recorded_time: d.getTime(),
+			alliance: Match.alliance,
+			auto_balance: Match.auto.balance,
+			auto_move: Match.auto.move,
+			teleop_balance: Match.teleop.balance,
+			parked: Match.endgame.parked,
+			endgame_score: Match.endgame.score,
+			endgame_time: Match.endgame.time,
+			penalty: Match.penalty,
+			disabled: Match.disabled,
+			alliance_final_score: Match.alliance_final_score,
+			cycle_time: Match.cycle_time,
+			pickup_time: Match.pickup_time,
+			scouter_comments: Match.comments,
+		});
+	},
 
 	qr: function() {
 		// gzip data
@@ -123,7 +164,9 @@ var Match = {
 const State = () => ({ match: Match, team: Team });
 const Actions = state => ({
 	reset: function() {
+		Match.save();
 		Match.reset();
+		Team.save();
 		Team.reset();
 	},
 	get: function(vars) {
@@ -145,7 +188,7 @@ var NavBar = {
 	view: function() {
 		return m("nav",
 			m("ul",
-				m("li", m("a", { class: "button", href: "#!/reset" }, "Reset" )),
+				m("li", m("a", { class: "button", href: "#!/reset" }, "Save & Reset" )),
 				m("li", m("a", { class: "button", href: "#!/scout/pit" }, "Pit Scout" )),
 				m("li", m("a", { class: "button", href: "#!/scout/match" }, "Match Scout" )),
 				m("li", m("a", { class: "button", href: "#!/driver" }, "Driver Meeting" ))

@@ -4,8 +4,8 @@ Just run a webserver in the root and it should work.
 This app is using the [Mithril.js](https://mithril.js.org) framework as it looked like a good simple one.
 
 ## ToDo:
-- [ ] Seperate Pit & Match scout data
-- [ ] Store data in IndexedDB
+- [x] Seperate Pit & Match scout data
+- [x] Store data in IndexedDB
 - [ ] Load data from IndexedDB
 - [ ] Load data from Backend into IndexedDB
 	- How can we transfer data without Bluetooth/Data/WiFi?
