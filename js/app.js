@@ -151,6 +151,81 @@ var ScoutMatch = {
 						}
 					})
 				]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Auto Move"),
+					m("input.input[type=checkbox]", {
+						checked: Match.data.auto.move,
+						oninput: function(e) {
+							Match.data.auto.move = e.target.checked;
+							console.log("Auto Move: " + Match.data.auto.move);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Teleop Balance"),
+					m("input.input[type=checkbox]", {
+						checked: Match.data.teleop.balance,
+						oninput: function(e) {
+							Match.data.teleop.balance = e.target.checked;
+							console.log("Teleop Balance: " + Match.data.teleop.balance);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Endgame Parked"),
+					m("input.input[type=checkbox]", {
+						checked: Match.data.endgame.parked,
+						oninput: function(e) {
+							Match.data.endgame.parked = e.target.checked;
+							console.log("Endgame Parked: " + Match.data.endgame.parked);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Endgame Score"),
+				m("input.input[type=number][placeholder=0]", {
+					value: Match.data.endgame.score,
+					oninput: function(e) {
+						Match.data.endgame.score = e.target.value;
+						console.log("Endgame Score: " + Match.data.endgame.score);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Penalties"),
+				m("input.input[type=number]", {
+					value: Match.data.penalty.penalty,
+					oninput: function(e) {
+						Match.data.penalty.penalty = e.target.value;
+						console.log("Penalties: " + Match.data.penalty.penalty);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Disabled"),
+					m("input.input[type=checkbox]", {
+						checked: Match.data.penalty.disabled,
+						oninput: function(e) {
+							Match.data.penalty.disabled = e.target.checked;
+							console.log("Disabled: " + Match.data.penalty.disabled);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Alliance Final Score"),
+				m("input.input[type=number]", {
+					value: Match.data.misc.alliance_final_score,
+					oninput: function(e) {
+						Match.data.misc.alliance_final_score = e.target.value;
+						console.log("Alliance Final Score: " + Match.data.misc.alliance_final_score);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+				m("label.label", "Comments"),
+				m("input.input[type=text][placeholder='Freeform short comment']", {
+					value: Match.data.misc.comments,
+					oninput: function(e) {
+						Match.data.misc.comments = e.target.value;
+					}
+				})]),
 			]),
 		])]
 		)}
