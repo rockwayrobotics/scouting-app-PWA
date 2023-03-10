@@ -28,8 +28,9 @@ input {
 }
 
 input:focus, input:focus-visible {
-  outline-color: lightcoral;
-  border: 2px solid lightcoral;
+	rgb(255, 56, 86);
+  outline-color: rgb(255, 56, 86);
+  border: 2px solid rgb(255, 56, 86);
 }
 
 
