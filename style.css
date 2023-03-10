@@ -65,12 +65,10 @@ nav {
 nav ul {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
-	row-gap: 20px;
+	justify-content: space-around;
 }
 
 nav ul li {
-	flex-basis: 15%;
 	list-style: none;
 }
 
@@ -78,7 +76,7 @@ nav ul li {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	gap: 15em;
+	gap: 10em;
 }
 
 .center {

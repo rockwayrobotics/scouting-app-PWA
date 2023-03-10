@@ -37,6 +37,28 @@ var Match = {
 			pickup_time: 0,
 			comments: "",
 		}
+	},
+
+	reset: function() {
+		Match.width=0.0;
+		Match.swerve=false;
+		Match.tippy=false;
+		Match.autos="";
+
+		Match.data.linked_event="";
+		Match.data.alliance="blue";
+		Match.data.auto.balance=false;
+		Match.data.auto.move=false;
+		Match.data.teleop.balance=false;
+		Match.data.endgame.parked=false;
+		Match.data.endgame.score=0;
+		Match.data.endgame.time=0;
+		Match.data.penalty.penalty=0;
+		Match.data.penalty.disabled=false;
+		Match.data.misc.alliance_final_score=0;
+		Match.data.misc.cycle_time=0;
+		Match.data.misc.pickup_time=0;
+		Match.data.misc.comments="";
 	}
 }
 
@@ -67,7 +89,8 @@ var ScoutSetup = {
 			m(NavBar),
 			m("form", {
 				onsubmit: function(e) {
-					e.preventDefault()
+					e.preventDefault();
+					Match.reset();
 					window.location.href = "#!/scout/pit";
 				},
 				class: "setup",
@@ -89,12 +112,48 @@ var ScoutMatch = {
 	view: function() {
 		return m("div", { class: "main" }, [
 			m(NavBar),
-			m("div", [
+			m("div", { class: "page" }, [
 				m("h1", "Match Scouting"),
 				m("h2", "Team #"+Match.team),
+			m("form", {
+				onsubmit: function(e) {
+					e.preventDefault()
+				}
+			}, [m("div", { class: "formBlock" }, [
+				m("label.label", "Event"),
+				m("input.input[type=text][placeholder=abc123]", {
+					value: Match.data.linked_event,
+					oninput: function(e) {
+						Match.data.linked_event = e.target.value;
+						console.log("Event: " + Match.data.linked_event);
+					}
+				})]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Alliance"),
+					m("select[name=alliance][id=alliance]", {
+						value: Match.data.alliance,
+						oninput: function(e) {
+							Match.data.alliance = e.target.value;
+							console.debug("Alliance: " + Match.data.alliance);
+						}
+					},
+						m("option[value=red]", "Red"),
+						m("option[value=blue]", "Blue"),
+					),
+				]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Auto Balance"),
+					m("input.input[type=checkbox]", {
+						checked: Match.data.auto.balance,
+						oninput: function(e) {
+							Match.data.auto.balance = e.target.checked;
+							console.log("Auto Balance: " + Match.data.auto.balance);
+						}
+					})
+				]),
 			]),
-		])
-	}
+		])]
+		)}
 }
 
 var ScoutPit = {
