@@ -14,6 +14,7 @@ self.addEventListener("install", event => {
                 "/js/qrcode.js",
                 "/js/app.js",
                 "/js/mithril.js",
+				"/js/lzw.js",
 				"/images/favicon.ico",
 				"/images/icons-512.png",
 				"/images/icons-vector.svg",
