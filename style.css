@@ -66,6 +66,7 @@ nav ul {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	gap: 2.5em;
 }
 
 nav ul li {
@@ -76,6 +77,8 @@ nav ul li {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	align-items: center;
+	padding-bottom: 20px;
 	gap: 5em;
 }
 
@@ -137,3 +140,10 @@ input {
    appearance: none;
    margin: -10px; 
  }
+
+ #qrcode {
+	 border-radius: 10px;
+	 background: #b16286;
+	 padding: 8px;
+	 box-shadow: #8f3f71 4px 4px 0px 0px;
+}

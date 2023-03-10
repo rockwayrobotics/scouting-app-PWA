@@ -8,15 +8,15 @@ self.addEventListener("install", event => {
 		caches.open(cacheName).then(cache => {
 			return cache.addAll([
 				"/",
-                "index.html",
-                "manifest.json",
-                "style.css",
-                "js/qrcode.js",
-                "js/app.js",
-                "js/mithril.js",
-				"images/favicon.ico",
-				"images/icons-512.png",
-				"icons-vector.svg",
+                "/index.html",
+                "/manifest.json",
+                "/style.css",
+                "/js/qrcode.js",
+                "/js/app.js",
+                "/js/mithril.js",
+				"/images/favicon.ico",
+				"/images/icons-512.png",
+				"/images/icons-vector.svg",
 			]);
 		})
 	);

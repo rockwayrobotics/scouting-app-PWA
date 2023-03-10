@@ -4,6 +4,34 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('js/sw.js');
 }
 
+function convertObjectToBinary(obj) {
+    let output = '',
+        input = JSON.stringify(obj) // convert the json to string.
+    // loop over the string and convert each charater to binary string.
+    for (i = 0; i < input.length; i++) {
+        output += input[i].charCodeAt(0).toString(2) + " ";
+    }
+    return output.trimEnd();
+}
+
+function convertBinaryToObject(str) {
+    var newBin = str.split(" ");
+    var binCode = [];
+    for (i = 0; i < newBin.length; i++) {
+        binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+    }
+    let jsonString = binCode.join("");
+    return JSON.parse(jsonString)
+}
+
+function bin2String(array) {
+  var result = "";
+  for (var i = 0; i < array.length; i++) {
+    result += String.fromCharCode(parseInt(array[i], 2));
+  }
+  return result;
+}
+
 // Models
 var Match = {
 	team: 0,
@@ -39,7 +67,29 @@ var Match = {
 		}
 	},
 
+	// save: function() {
+	// 	// Save team&match data in IndexedDB
+	// }
+
+	// load: function(id) {
+	// 	// Load team data from INdexedDB
+	// }
+
+	qr: function() {
+		// gzip data
+		var binary = convertObjectToBinary(Match);
+		var compressed = bin2String(LZW.compress(binary));
+		console.info(binary);
+		console.info(compressed);
+		// generate QR code image
+		let qrcodeContainer = document.getElementById("qrcode");
+		qrcodeContainer.style = "";
+		qrcodeContainer.innerHTML = "";
+		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
+	},
+
 	reset: function() {
+		Match.qr();
 		Match.width=0.0;
 		Match.swerve=false;
 		Match.tippy=false;
@@ -87,6 +137,8 @@ var ScoutSetup = {
 	view: function() {
 		return m("div", { class: "main" },
 			m(NavBar),
+			m("div[style='display:none']", { id: "qrcode" }),
+			m("button.button", { onclick: Match.qr }, "QR Code"),
 			m("form", {
 				onsubmit: function(e) {
 					e.preventDefault();
