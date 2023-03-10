@@ -125,6 +125,15 @@ const Actions = state => ({
 	reset: function() {
 		Match.reset();
 		Team.reset();
+	},
+	get: function(vars) {
+		if (vars.length == 2) {
+			return state[vars[0]][vars[1]];
+		} else if (vars.length == 3) {
+			return state[vars[0]][vars[1]][vars[2]];
+		} else {
+			console.error("Cannot access variable!");
+		}
 	}
 });
 
@@ -148,7 +157,7 @@ var inputBlock = {
 	view: function(vnode) {
 		return m("div", { class: "formBlock" },
 			m("label.label", vnode.attrs.label),
-			m("input.input[type="+vnode.attrs.type+"][placeholder="+vnode.attrs.placeholder+"]",
+			m("input.input[type="+vnode.attrs.type+"][placeholder="+actions.get(vnode.attrs.vars)+"]",
 				{
 					oninput: function(e) {
 						if (vnode.attrs.vars.length == 2) {
@@ -163,29 +172,14 @@ var inputBlock = {
 	}
 }
 
-function checked_value(vars) {
-	if (vars.length == 2) {
-		return state[vars[0]][vars[1]];
-	} else if (vars.length == 3) {
-		return state[vars[0]][vars[1]][vars[2]];
-	};
-}
-
 var checkBlock = {
 	view: function(vnode) {
 		return m("div", { class: "formBlock" },
 			m("label.label", vnode.attrs.label),
 			m("input.input[type=checkbox]",
 				{
-					checked: checked_value(vnode.attrs.vars),
-					onready: function(e){
-						console.log("ready!");
-						if (vnode.attrs.vars.length == 2) {
-							e.target.checked = state[vnode.attrs.vars[0]][vnode.attrs.vars[1]];
-						} else if (vnode.attrs.vars.length == 3) {
-							e.target.checked = state[vnode.attrs.vars[0]][vnode.attrs.vars[1]][vnode.attrs.vars[2]];
-						};
-					},
+					checked: actions.get(vnode.attrs.vars),
+					onready: function(e){ e.target.checked = actions.get(vnode.attrs.vars); },
 					oninput: function(e) {
 						if (vnode.attrs.vars.length == 2) {
 							state[vnode.attrs.vars[0]][vnode.attrs.vars[1]] = e.target.checked;
@@ -233,13 +227,11 @@ var ScoutMatch = {
 					m(inputBlock, {
 						label: "Linked Team",
 						type: "number",
-						placeholder: state.team.number,
 						vars: ['match', 'linked_team'],
 					}),
 					m(inputBlock, {
 						label: "Linked Event",
 						type: "text",
-						placeholder: "abc123",
 						vars: ['match', 'linked_event'],
 					}),
 					m(checkBlock, {
@@ -262,13 +254,11 @@ var ScoutMatch = {
 					m(inputBlock, {
 						label: "Endgame Score",
 						type: "number",
-						placeholder: state.match.endgame.score,
 						vars: ['match', 'endgame', 'score'],
 					}),
 					m(inputBlock, {
 						label: "Penalties",
 						type: "number",
-						placeholder: state.match.penalty,
 						vars: ['match', 'penalty'],
 					}),
 					m(checkBlock, {
@@ -278,13 +268,11 @@ var ScoutMatch = {
 					m(inputBlock, {
 						label: "Alliance Final Score",
 						type: "number",
-						placeholder: state.match.alliance_final_score,
 						vars: ['match', 'alliance_final_score'],
 					}),
 					m(inputBlock, {
 						label: "Comments",
 						type: "text",
-						placeholder: "Freeform comments",
 						vars: ['match', 'comments'],
 					}),
 				)
@@ -307,19 +295,16 @@ var ScoutPit = {
 					m(inputBlock, {
 						label: "Team #",
 						type: "number",
-						placeholder: "8089",
 						vars: ['team', 'number'],
 					}),
 					m(inputBlock, {
 						label: "Team Name",
 						type: "text",
-						placeholder: "Rockway Robotics",
 						vars: ['team', 'name'],
 					}),
 					m(inputBlock, {
 						label: "Robot Width (in)",
 						type: "number",
-						placeholder: "24.5",
 						vars: ['team', 'width'],
 					}),
 					m(checkBlock, {
@@ -333,7 +318,6 @@ var ScoutPit = {
 					m(inputBlock, {
 						label: "Short Description of Autos:",
 						type: "text",
-						placeholder: "Can do...",
 						vars: ['team', 'autos'],
 					}),
 				)
