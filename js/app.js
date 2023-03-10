@@ -164,10 +164,9 @@ var Match = {
 const State = () => ({ match: Match, team: Team });
 const Actions = state => ({
 	reset: function() {
-		Match.save();
 		Match.reset();
-		Team.save();
 		Team.reset();
+		window.location.href = "#!/scout/pit";
 	},
 	get: function(vars) {
 		if (vars.length == 2) {
@@ -188,10 +187,10 @@ var NavBar = {
 	view: function() {
 		return m("nav",
 			m("ul",
-				m("li", m("a", { class: "button", href: "#!/reset" }, "Save & Reset" )),
-				m("li", m("a", { class: "button", href: "#!/scout/pit" }, "Pit Scout" )),
-				m("li", m("a", { class: "button", href: "#!/scout/match" }, "Match Scout" )),
-				m("li", m("a", { class: "button", href: "#!/driver" }, "Driver Meeting" ))
+				m("li", m("a", { class: "button", id: "reset", href: "#!/reset" }, "Reset" )),
+				m("li", m("a", { class: "button", id: "pit", href: "#!/scout/pit" }, "Pit Scout" )),
+				m("li", m("a", { class: "button", id: "match", href: "#!/scout/match" }, "Match Scout" )),
+				m("li", m("a", { class: "button", id: "meet", href: "#!/driver" }, "Driver Meeting" ))
 			))
 	}
 }
@@ -254,11 +253,6 @@ var Splash = {
 var Reset = {
 	view: function() {
 		actions.reset();
-		return m("div", { class: "main" },
-			m(NavBar),
-			m("div", { class: "page" },
-				m("h1", "Hi")
-			))
 	}
 }
 

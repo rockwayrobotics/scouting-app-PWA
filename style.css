@@ -38,23 +38,48 @@ input:focus, input:focus-visible {
  padding: 17px 40px;
  border-radius: 10px;
  border: 0;
- background-color: rgb(255, 56, 86);
+ background-color: #98971a;
  letter-spacing: 1.5px;
- font-size: 15px;
+ font-size: 16px;
  transition: all .3s ease;
- box-shadow: rgb(201, 46, 70) 0px 10px 0px 0px;
- color: hsl(0, 0%, 100%);
+ box-shadow: #79740e 0px 10px 0px 0px;
+ color: #fbf1c7;
  text-decoration: none;
 }
+
+.button#reset {
+	background-color: #cc241d;
+ 	box-shadow: #9d0006 0px 10px 0px 0px;
+}
+.button#reset:hover { box-shadow: #9d0006 0px 7px 0px 0px; }
+.button#reset:active { box-shadow: #9d0006 0px 0px 0px 0px; }
+
+.button#pit {
+	background-color: #458588;
+ 	box-shadow: #076678 0px 10px 0px 0px;
+}
+.button#pit:hover { box-shadow: #076678 0px 7px 0px 0px; }
+.button#pit:active { box-shadow: #076678 0px 0px 0px 0px; }
+
+.button#match {
+	background-color: #b16286;
+ 	box-shadow: #8f3f71 0px 10px 0px 0px;
+}
+.button#match:hover { box-shadow: #b16286 0px 7px 0px 0px; }
+.button#match:active { box-shadow: #b16286 0px 0px 0px 0px; }
+
+.button#meet {
+	background-color: #d79921;
+ 	box-shadow: #b57614 0px 10px 0px 0px;
+}
+.button#meet:hover { box-shadow: #b57614 0px 7px 0px 0px; }
+.button#meet:active { box-shadow: #b57614 0px 0px 0px 0px; }
 
 .button:hover {
  box-shadow: rgb(201, 46, 70) 0px 7px 0px 0px;
 }
 
 .button:active {
- background-color: rgb(255, 56, 86);
- /*50, 168, 80*/
- box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
  transform: translateY(5px);
  transition: 200ms;
 }
@@ -80,7 +105,7 @@ nav ul li {
 	justify-content: space-between;
 	align-items: center;
 	padding-bottom: 20px;
-	gap: 5em;
+	gap: 2em;
 }
 
 .center {
