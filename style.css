@@ -121,3 +121,7 @@ form {
 	background-color: #282828;
 	color: #fbf1c7;
 }
+
+input {
+	accent-color: rgb(255, 56, 86);
+}
