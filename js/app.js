@@ -187,10 +187,10 @@ var NavBar = {
 	view: function() {
 		return m("nav",
 			m("ul",
-				m("li", m("a", { class: "button", id: "reset", href: "#!/reset" }, "Reset" )),
-				m("li", m("a", { class: "button", id: "pit", href: "#!/scout/pit" }, "Pit Scout" )),
-				m("li", m("a", { class: "button", id: "match", href: "#!/scout/match" }, "Match Scout" )),
-				m("li", m("a", { class: "button", id: "meet", href: "#!/driver" }, "Driver Meeting" ))
+				m("li", m("a", { class: "button", id: "del", href: "#!/reset" }, "Reset" )),
+				m("li", m("a", { class: "button", href: "#!/scout/pit" }, "Pit Scout" )),
+				m("li", m("a", { class: "button", href: "#!/scout/match" }, "Match Scout" )),
+				m("li", m("a", { class: "button", href: "#!/driver" }, "Driver Meeting" ))
 			))
 	}
 }
@@ -321,7 +321,7 @@ var ScoutMatch = {
 				),
 				m(QR),
 				m("div", { class: "formBlock", id: "bottom" },
-					m("button.button", {
+					m("button.button[id=ok]", {
 						onclick: function() {
 							Match.save();
 						}
@@ -380,7 +380,7 @@ var ScoutPit = {
 				),
 				m(QR),
 				m("div", { class: "formBlock", id: "bottom" },
-					m("button.button", {
+					m("button.button[id=ok]", {
 						onclick: function() {
 							Team.save();
 						}
