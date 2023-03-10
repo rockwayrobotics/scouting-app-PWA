@@ -1,3 +1,4 @@
+@media (prefers-color-scheme: light) {
 :root {
 	--bg: #fbf1c7;
 	--fg: #282828;
@@ -7,7 +8,18 @@
 	--ok-sh: #427b58;
 	--neut: #7c6f64;
 	--neut-sh: #665c54;
-}
+}}
+@media (prefers-color-scheme: dark) {
+:root {
+	--bg: #1e1e2e;
+	--fg: #cdd6f4;
+	--err: #f38ba8;
+	--err-sh: rgba(243, 139, 168, 0.5);
+	--ok: #a6e3a1;
+	--ok-sh: rgba(166, 227, 161, 0.5);
+	--neut: #f2cdcd;
+	--neut-sh: rgba(242, 205, 205, 0.5);
+}}
 
 body, .input {
     font-size: 16px;
@@ -65,7 +77,7 @@ input:focus, input:focus-visible {
 	background-color: var(--ok);
  	box-shadow: var(--ok-sh) 0px 10px 0px 0px;
 }
-.button#ok:hover { box-shadow: var(--ok) 0px 7px 0px 0px; }
+.button#ok:hover { box-shadow: var(--ok-sh) 0px 7px 0px 0px; }
 .button#ok:active { box-shadow: var(--ok-sh) 0px 0px 0px 0px; }
 
 .button:hover {
