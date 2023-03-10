@@ -25,7 +25,7 @@ var Match = {
 		endgame: {
 			parked: false,
 			score: 0,
-			time: 0,
+			time: "",
 		},
 		penalty: {
 			penalty: 0,
@@ -33,8 +33,8 @@ var Match = {
 		},
 		misc: {
 			alliance_final_score: 0,
-			cycle_time: 0,
-			pickup_time: 0,
+			cycle_time: "",
+			pickup_time: "",
 			comments: "",
 		}
 	},
@@ -52,12 +52,12 @@ var Match = {
 		Match.data.teleop.balance=false;
 		Match.data.endgame.parked=false;
 		Match.data.endgame.score=0;
-		Match.data.endgame.time=0;
+		Match.data.endgame.time="";
 		Match.data.penalty.penalty=0;
 		Match.data.penalty.disabled=false;
 		Match.data.misc.alliance_final_score=0;
-		Match.data.misc.cycle_time=0;
-		Match.data.misc.pickup_time=0;
+		Match.data.misc.cycle_time="";
+		Match.data.misc.pickup_time="";
 		Match.data.misc.comments="";
 	}
 }
@@ -191,6 +191,21 @@ var ScoutMatch = {
 					}
 				})]),
 				m("div", { class: "formBlock" }, [
+					m("label.label", "Endgame Time"),
+					m("input.input[type=text][id='durationForm']", {
+						name: "duration",
+						maxlength: 8,
+						pattern: "^((\d+:)?\d+:)?\d*$",
+						placeholder: "mm:ss",
+						size: 30,
+						value: Match.data.endgame.time,
+						oninput: function(e) {
+							Match.data.endgame.time = e.target.value;
+							console.log("Endgame Time: " + Match.data.endgame.time);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
 				m("label.label", "Penalties"),
 				m("input.input[type=number]", {
 					value: Match.data.penalty.penalty,
@@ -218,6 +233,36 @@ var ScoutMatch = {
 						console.log("Alliance Final Score: " + Match.data.misc.alliance_final_score);
 					}
 				})]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Cycle Time"),
+					m("input.input[type=text][id='durationForm']", {
+						name: "duration",
+						maxlength: 8,
+						pattern: "^((\d+:)?\d+:)?\d*$",
+						placeholder: "mm:ss",
+						size: 30,
+						value: Match.data.misc.cycle_time,
+						oninput: function(e) {
+							Match.data.misc.cycle_time = e.target.value;
+							console.log("Cycle Time: " + Match.data.misc.cycle_time);
+						}
+					})
+				]),
+				m("div", { class: "formBlock" }, [
+					m("label.label", "Pickup Time"),
+					m("input.input[type=text][id='durationForm']", {
+						name: "duration",
+						maxlength: 8,
+						pattern: "^((\d+:)?\d+:)?\d*$",
+						placeholder: "mm:ss",
+						size: 30,
+						value: Match.data.misc.pickup_time,
+						oninput: function(e) {
+							Match.data.misc.pickup_time = e.target.value;
+							console.log("Pickup Time: " + Match.data.misc.pickup_time);
+						}
+					})
+				]),
 				m("div", { class: "formBlock" }, [
 				m("label.label", "Comments"),
 				m("input.input[type=text][placeholder='Freeform short comment']", {
