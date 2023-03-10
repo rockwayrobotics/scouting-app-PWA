@@ -50,8 +50,8 @@ var Team = {
 	swerve: false,
 	tippy: false,
 
-	save: function() {
-		db.teams.put({
+	async save() {
+		await db.teams.put({
 			number: parseInt(Team.number),
 			name: Team.name,
 			width: parseFloat(Team.width),
@@ -61,7 +61,17 @@ var Team = {
 		});
 	},
 
-	qr: function() {
+	async load(id) {
+		const new_team = await db.teams.where('number').equals(parseInt(id)).first();
+		Team.number = new_team.number;
+		Team.name = new_team.name;
+		Team.width = new_team.width;
+		Team.autos = new_team.autos;
+		Team.swerve = new_team.swerve;
+		Team.tippy = new_team.tippy;
+	},
+
+	async qr() {
 		// gzip data
 		var binary = convertObjectToBinary(Team);
 		var compressed = bin2String(LZW.compress(binary));
@@ -74,7 +84,7 @@ var Team = {
 		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
 	},
 	
-	reset: function() {
+	reset() {
 		Team.number=0;
 		Team.width=0.0;
 		Team.swerve=false;
@@ -105,11 +115,30 @@ var Match = {
 	alliance_final_score: 0,
 	cycle_time: 0,
 	pickup_time: 0,
-	comments: 0,
+	comments: "",
 
-	save: function() {
+	async load(number) {
+		const new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
+		Match.linked_team = new_match.linked_team;
+		Match.linked_event = new_match.linked_event;
+		Match.alliance = new_match.alliance;
+		Match.auto.balance = new_match.auto_balance;
+		Match.auto.move = new_match.auto_move;
+		Match.teleop = new_match.teleop_balance;
+		Match.endgame.parked = new_match.parked;
+		Match.endgame.score = new_match.endgame_score;
+		Match.endgame.time = new_match.endgame_time;
+		Match.penalty = new_match.penalty;
+		Match.disabled = new_match.disabled;
+		Match.alliance_final_score = new_match.alliance_final_score;
+		Match.cycle_time = new_match.cycle_time;
+		Match.pickup_time = new_match.pickup_time;
+		Match.comments = new_match.comments;
+	},
+
+	async save() {
 		var d = new Date();
-		db.matches.put({
+		await db.matches.put({
 			linked_team: parseInt(Match.linked_team),
 			linked_event: Match.linked_event,
 			recorded_time: d.getTime(),
@@ -129,12 +158,10 @@ var Match = {
 		});
 	},
 
-	qr: function() {
+	async qr() {
 		// gzip data
 		var binary = convertObjectToBinary(Match);
 		var compressed = bin2String(LZW.compress(binary));
-		console.info(binary);
-		console.info(compressed);
 		// generate QR code image
 		let qrcodeContainer = document.getElementById("qrcode");
 		qrcodeContainer.style = "";
@@ -142,7 +169,8 @@ var Match = {
 		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
 	},
 
-	reset: function() {
+	reset() {
+		Match.linked_team = 0;
 		Match.linked_event="";
 		Match.alliance="blue";
 		Match.auto.balance=false;
@@ -161,7 +189,7 @@ var Match = {
 }
 
 // State
-const State = () => ({ match: Match, team: Team });
+const State = () => ({ match: Match, team: Team, load_id: 0 });
 const Actions = state => ({
 	reset: function() {
 		Match.reset();
@@ -332,6 +360,18 @@ var ScoutMatch = {
 							Match.qr();
 						}
 					},"Show QR")
+				),
+				m("div", { class: "formBlock", id: "bottom" },
+					m("button.button[id=ok]", {
+						onclick: function() {
+							Match.load(state.load_id);
+						}
+					}, "Load Match"),
+					m("input.input[type=number]", {
+						oninput: function(e) {
+							state.load_id = parseInt(e.target.value);
+						}
+					})
 				)
 			])
 		])
@@ -391,6 +431,18 @@ var ScoutPit = {
 							Team.qr();
 						}
 					},"Show QR")
+				),
+				m("div", { class: "formBlock", id: "bottom" },
+					m("button.button[id=ok]", {
+						onclick: function() {
+							Team.load(state.load_id);
+						}
+					}, "Load Team"),
+					m("input.input[type=number]", {
+						oninput: function(e) {
+							state.load_id = parseInt(e.target.value);
+						}
+					})
 				)
 			])
 		])
