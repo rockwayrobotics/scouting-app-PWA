@@ -147,4 +147,9 @@ input {
 	 background: #b16286;
 	 padding: 8px;
 	 box-shadow: #8f3f71 4px 4px 0px 0px;
+	 margin-top: 1.5em;
+}
+
+#bottom {
+	margin-top: 1.5em;
 }

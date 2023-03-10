@@ -196,6 +196,12 @@ var NavBar = {
 	}
 }
 
+var QR = {
+	view: function() {
+		return m("div", { id: "qrcode", class: "qrcode", style: "display:none" })
+	}
+}
+
 var inputBlock = {
 	view: function(vnode) {
 		return m("div", { class: "formBlock" },
@@ -318,6 +324,20 @@ var ScoutMatch = {
 						type: "text",
 						vars: ['match', 'comments'],
 					}),
+				),
+				m(QR),
+				m("div", { class: "formBlock", id: "bottom" },
+					m("button.button", {
+						onclick: function() {
+							Match.save();
+						}
+					}, "Save"),
+					m("button.button", {
+						onclick: function() {
+							document.getElementById("qrcode").style = "";
+							Match.qr();
+						}
+					},"Show QR")
 				)
 			])
 		])
@@ -363,6 +383,20 @@ var ScoutPit = {
 						type: "text",
 						vars: ['team', 'autos'],
 					}),
+				),
+				m(QR),
+				m("div", { class: "formBlock", id: "bottom" },
+					m("button.button", {
+						onclick: function() {
+							Team.save();
+						}
+					}, "Save"),
+					m("button.button", {
+						onclick: function() {
+							document.getElementById("qrcode").style = "";
+							Team.qr();
+						}
+					},"Show QR")
 				)
 			])
 		])
