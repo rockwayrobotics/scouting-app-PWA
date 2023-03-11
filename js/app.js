@@ -63,15 +63,15 @@ var Team = {
 	},
 
 	async load(id) {
-		const new_team = await db.teams.where('number').equals(parseInt(id)).first();
-		Team.number = new_team.number;
-		Team.name = new_team.name;
-		Team.width = new_team.width;
-		Team.autos = new_team.autos;
-		Team.swerve = new_team.swerve;
-		Team.tippy = new_team.tippy;
+		let new_team = await db.teams.where('number').equals(parseInt(id)).first();
+		console.log("Team #"+new_team.numer+"loaded");
+		// Team.number = new_team.number;
+		// Team.name = new_team.name;
+		// Team.width = new_team.width;
+		// Team.autos = new_team.autos;
+		// Team.swerve = new_team.swerve;
+		// Team.tippy = new_team.tippy;
 
-		window.location.href = "#!/scout/pit";
 	},
 
 	async list() {
@@ -79,10 +79,10 @@ var Team = {
 		state.teams_list = teams;
 	},
 
-	async qr() {
+	qr() {
 		// gzip data
-		var binary = convertObjectToBinary(Team);
-		var compressed = bin2String(LZW.compress(binary));
+		let binary = convertObjectToBinary(Team);
+		let compressed = bin2String(LZW.compress(binary));
 		console.info(binary);
 		console.info(compressed);
 		// generate QR code image
@@ -98,8 +98,6 @@ var Team = {
 		Team.swerve=false;
 		Team.tippy=false;
 		Team.autos="";
-
-		await Team.list();
 	}
 }
 
@@ -151,7 +149,7 @@ var Match = {
 	},
 
 	async save() {
-		var d = new Date();
+		let d = new Date();
 		await db.matches.put({
 			match_number: parseInt(Match.number),
 			linked_team: parseInt(Match.linked_team),
@@ -176,13 +174,13 @@ var Match = {
 
 	async list() {
 		const matches = await db.matches.toArray();
-		state.matches_list = await matches;
+		state.matches_list = matches;
 	},
 
-	async qr() {
+	qr() {
 		// gzip data
-		var binary = convertObjectToBinary(Match);
-		var compressed = bin2String(LZW.compress(binary));
+		let binary = convertObjectToBinary(Match);
+		let compressed = bin2String(LZW.compress(binary));
 		// generate QR code image
 		let qrcodeContainer = document.getElementById("qrcode");
 		qrcodeContainer.style = "";
@@ -207,18 +205,16 @@ var Match = {
 		Match.cycle_time="";
 		Match.pickup_time="";
 		Match.comments="";
-
-		await Match.list();
 	}
 }
 
 // State
 const State = () => ({ match: Match, team: Team, load_id: 0, teams_list: [], matches_list: [] });
 const Actions = state => ({
-	reset: function() {
-		Team.list();
-		Match.reset();
-		Team.reset();
+	reset: async function() {
+		await Team.list();
+		await Match.reset();
+		await Team.reset();
 		window.location.href = "#!/scout/pit";
 	},
 	get: function(vars) {
@@ -296,7 +292,7 @@ var checkBlock = {
 
 var selectBlock = {
 	view: function(vnode) {
-		var options = [];
+		let options = [];
 		if (vnode.attrs.id == "teams") {
 			for (i in state.teams_list) {
 				options.push(m("option", { value: state.teams_list[i].number }, state.teams_list[i].number ));
@@ -327,6 +323,8 @@ var selectBlock = {
 // Views`
 var Splash = {
     view: function() {
+		Team.list();
+		Match.list();
         return m("div", { class: "center" },
 			m("a", { class: "button", href: "#!/reset"}, "Start Scouting!")
 		)
@@ -351,58 +349,58 @@ var ScoutMatch = {
 					}
 				},
 					m(inputBlock, {
-						label: "Match Number",
+						label: "Match Number:",
 						type: "number",
 						vars: ['match', 'number'],
 					}),
 					m(selectBlock, {
-						label: "Linked Team",
+						label: "Linked Team:",
 						id: "teams",
 						vars: ['match', 'linked_team'],
 					}),
 					m(inputBlock, {
-						label: "Linked Event",
+						label: "Event Code:",
 						type: "text",
 						vars: ['match', 'linked_event'],
 					}),
 					m(checkBlock, {
-						label: "Auto Balance",
+						label: "Can they balance in Auto?",
 						vars: ['match', 'auto', 'balance'],
 					}),
 					m(checkBlock, {
-						label: "Auto Move",
+						label: "Did they move in Auto?",
 						vars: ['match', 'auto', 'move'],
 					}),
 					m(checkBlock, {
-						label: "Teleop Balance",
+						label: "Can they balance in Teleop?",
 						obj: "match",
 						vars: ['match', 'teleop', 'balance'],
 					}),
 					m(checkBlock, {
-						label: "Endgame Parked",
+						label: "Did they park in the Endgame?",
 						vars: ['match', 'endgame', 'parked'],
 					}),
 					m(inputBlock, {
-						label: "Endgame Score",
+						label: "Endgame Score:",
 						type: "number",
 						vars: ['match', 'endgame', 'score'],
 					}),
 					m(inputBlock, {
-						label: "Penalties",
+						label: "Penalties:",
 						type: "number",
 						vars: ['match', 'penalty'],
 					}),
 					m(checkBlock, {
-						label: "Disabled",
+						label: "Were they disabled?",
 						vars: ['match', 'disabled'],
 					}),
 					m(inputBlock, {
-						label: "Alliance Final Score",
+						label: "Alliance Final Score:",
 						type: "number",
 						vars: ['match', 'alliance_final_score'],
 					}),
 					m(inputBlock, {
-						label: "Comments",
+						label: "Misc. Comments:",
 						type: "text",
 						vars: ['match', 'comments'],
 					}),
@@ -410,8 +408,8 @@ var ScoutMatch = {
 				m(QR),
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
-						onclick: function() {
-							Match.save();
+						onclick: async function() {
+							await Match.save();
 						}
 					}, "Save"),
 					m("button.button", {
@@ -450,26 +448,26 @@ var ScoutPit = {
 					}
 				},
 					m(inputBlock, {
-						label: "Team #",
+						label: "Team #:",
 						type: "number",
 						vars: ['team', 'number'],
 					}),
 					m(inputBlock, {
-						label: "Team Name",
+						label: "Team Name:",
 						type: "text",
 						vars: ['team', 'name'],
 					}),
 					m(inputBlock, {
-						label: "Robot Width (in)",
+						label: "Robot Width (in):",
 						type: "number",
 						vars: ['team', 'width'],
 					}),
 					m(checkBlock, {
-						label: "Swerve Drive?",
+						label: "Do they have Swerve Drive?",
 						vars: ['team', 'swerve'],
 					}),
 					m(checkBlock, {
-						label: "Tippy?",
+						label: "Are they tippy?",
 						vars: ['team', 'tippy'],
 					}),
 					m(inputBlock, {
@@ -481,8 +479,8 @@ var ScoutPit = {
 				m(QR),
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
-						onclick: function() {
-							Team.save();
+						onclick: async function() {
+							await Team.save();
 						}
 					}, "Save"),
 					m("button.button", {

@@ -176,6 +176,7 @@ input {
  input[type=checkbox] {
 	 border: none;
 	 box-shadow: 0 0.2rem var(--neut);
+	 transform: scale(1.8);
 	}
 
  #qrcode {

@@ -3,15 +3,15 @@ Just run a webserver in the root and it should work.
 
 This app is using the [Mithril.js](https://mithril.js.org) framework as it looked like a good simple one.
 
-## ToDo:
-- [x] Seperate Pit & Match scout data
+## To-Do:
+- [x] Separate Pit & Match scout data
 - [x] Store data in IndexedDB
 - [x] Load data from IndexedDB
+- [x] More descriptive input labels
 - [ ] Input positions
-- [ ] More descriptive input labels
 - [ ] Auto track cycle/pickup time
 - [ ] Load data from Backend into IndexedDB
-	- How can we transfer data without Bluetooth/Data/WiFi?
+	- How can we transfer data without Bluetooth/Data/Wi-Fi?
 	- Load only diffs?
 - [ ] Driver Meeting view
 	- Avg. scoring time
