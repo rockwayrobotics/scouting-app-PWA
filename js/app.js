@@ -9,7 +9,7 @@ var db = new Dexie("Scouting");
 
 db.version(1).stores({
 	teams: "&number",
-	matches: "++match_number, linked_team"
+	matches: "&match_number, linked_team"
 });
 
 // Functions
@@ -59,6 +59,7 @@ var Team = {
 			swerve: Team.swerve,
 			tippy: Team.tippy,
 		});
+		await Team.list();
 	},
 
 	async load(id) {
@@ -69,6 +70,13 @@ var Team = {
 		Team.autos = new_team.autos;
 		Team.swerve = new_team.swerve;
 		Team.tippy = new_team.tippy;
+
+		window.location.href = "#!/scout/pit";
+	},
+
+	async list() {
+		const teams = await db.teams.toArray();
+		state.teams_list = teams;
 	},
 
 	async qr() {
@@ -84,16 +92,19 @@ var Team = {
 		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
 	},
 	
-	reset() {
+	async reset() {
 		Team.number=0;
 		Team.width=0.0;
 		Team.swerve=false;
 		Team.tippy=false;
 		Team.autos="";
+
+		await Team.list();
 	}
 }
 
 var Match = {
+	number: 0,
 	linked_team: 0,
 	linked_event: "",
 	alliance: "blue",
@@ -119,6 +130,7 @@ var Match = {
 
 	async load(number) {
 		const new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
+		Match.number = new_match.match_number;
 		Match.linked_team = new_match.linked_team;
 		Match.linked_event = new_match.linked_event;
 		Match.alliance = new_match.alliance;
@@ -134,11 +146,14 @@ var Match = {
 		Match.cycle_time = new_match.cycle_time;
 		Match.pickup_time = new_match.pickup_time;
 		Match.comments = new_match.comments;
+
+		window.location.href = "#!/scout/match";
 	},
 
 	async save() {
 		var d = new Date();
 		await db.matches.put({
+			match_number: parseInt(Match.number),
 			linked_team: parseInt(Match.linked_team),
 			linked_event: Match.linked_event,
 			recorded_time: d.getTime(),
@@ -156,6 +171,12 @@ var Match = {
 			pickup_time: Match.pickup_time,
 			scouter_comments: Match.comments,
 		});
+		await Match.list();
+	},
+
+	async list() {
+		const matches = await db.matches.toArray();
+		state.matches_list = await matches;
 	},
 
 	async qr() {
@@ -169,8 +190,9 @@ var Match = {
 		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
 	},
 
-	reset() {
-		Match.linked_team = 0;
+	async reset() {
+		Match.number=0;
+		Match.linked_team=0;
 		Match.linked_event="";
 		Match.alliance="blue";
 		Match.auto.balance=false;
@@ -185,13 +207,16 @@ var Match = {
 		Match.cycle_time="";
 		Match.pickup_time="";
 		Match.comments="";
+
+		await Match.list();
 	}
 }
 
 // State
-const State = () => ({ match: Match, team: Team, load_id: 0 });
+const State = () => ({ match: Match, team: Team, load_id: 0, teams_list: [], matches_list: [] });
 const Actions = state => ({
 	reset: function() {
+		Team.list();
 		Match.reset();
 		Team.reset();
 		window.location.href = "#!/scout/pit";
@@ -269,6 +294,36 @@ var checkBlock = {
 	}
 }
 
+var selectBlock = {
+	view: function(vnode) {
+		var options = [];
+		if (vnode.attrs.id == "teams") {
+			for (i in state.teams_list) {
+				options.push(m("option", { value: state.teams_list[i].number }, state.teams_list[i].number ));
+			};
+		} else {
+			for (i in state.matches_list) {
+				options.push(m("option", { value: state.matches_list[i].match_number }, state.matches_list[i].match_number ));
+			};
+		}
+		return m("div", { class: "formBlock" },
+			m("label.label", vnode.attrs.label),
+			m("select.input[name="+vnode.attrs.id+"][id="+vnode.attrs.id+"]",
+				{
+					oninput: function(e) {
+						if (vnode.attrs.vars.length == 1) {
+							state[vnode.attrs.vars[0]] = e.target.value;
+						} else {
+							state[vnode.attrs.vars[0]][vnode.attrs.vars[1]] = e.target.value;
+						}
+					}
+				},
+				options
+			)
+		)
+	}
+}
+
 // Views`
 var Splash = {
     view: function() {
@@ -296,8 +351,13 @@ var ScoutMatch = {
 					}
 				},
 					m(inputBlock, {
-						label: "Linked Team",
+						label: "Match Number",
 						type: "number",
+						vars: ['match', 'number'],
+					}),
+					m(selectBlock, {
+						label: "Linked Team",
+						id: "teams",
 						vars: ['match', 'linked_team'],
 					}),
 					m(inputBlock, {
@@ -367,11 +427,11 @@ var ScoutMatch = {
 							Match.load(state.load_id);
 						}
 					}, "Load Match"),
-					m("input.input[type=number]", {
-						oninput: function(e) {
-							state.load_id = parseInt(e.target.value);
-						}
-					})
+					m(selectBlock, {
+						label: "",
+						id: "matches",
+						vars: ['load_id'],
+					}),
 				)
 			])
 		])
@@ -438,11 +498,11 @@ var ScoutPit = {
 							Team.load(state.load_id);
 						}
 					}, "Load Team"),
-					m("input.input[type=number]", {
-						oninput: function(e) {
-							state.load_id = parseInt(e.target.value);
-						}
-					})
+					m(selectBlock, {
+						label: "",
+						id: "teams",
+						vars: ['load_id'],
+					}),
 				)
 			])
 		])
