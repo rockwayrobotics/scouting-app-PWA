@@ -63,14 +63,13 @@ var Team = {
 	},
 
 	async load(id) {
-		let new_team = await db.teams.where('number').equals(parseInt(id)).first();
-		console.log("Team #"+new_team.numer+"loaded");
-		// Team.number = new_team.number;
-		// Team.name = new_team.name;
-		// Team.width = new_team.width;
-		// Team.autos = new_team.autos;
-		// Team.swerve = new_team.swerve;
-		// Team.tippy = new_team.tippy;
+		var new_team = await db.teams.where('number').equals(parseInt(id)).first();
+		Team.number = new_team.number;
+		Team.name = new_team.name;
+		Team.width = new_team.width;
+		Team.autos = new_team.autos;
+		Team.swerve = new_team.swerve;
+		Team.tippy = new_team.tippy;
 
 	},
 
@@ -127,7 +126,7 @@ var Match = {
 	comments: "",
 
 	async load(number) {
-		const new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
+		var new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
 		Match.number = new_match.match_number;
 		Match.linked_team = new_match.linked_team;
 		Match.linked_event = new_match.linked_event;
@@ -144,8 +143,6 @@ var Match = {
 		Match.cycle_time = new_match.cycle_time;
 		Match.pickup_time = new_match.pickup_time;
 		Match.comments = new_match.comments;
-
-		window.location.href = "#!/scout/match";
 	},
 
 	async save() {
@@ -306,6 +303,7 @@ var selectBlock = {
 			m("label.label", vnode.attrs.label),
 			m("select.input[name="+vnode.attrs.id+"][id="+vnode.attrs.id+"]",
 				{
+					value: state[vnode.attrs.vars[0]],
 					oninput: function(e) {
 						if (vnode.attrs.vars.length == 1) {
 							state[vnode.attrs.vars[0]] = e.target.value;

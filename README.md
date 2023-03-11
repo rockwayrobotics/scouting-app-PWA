@@ -17,6 +17,10 @@ This app is using the [Mithril.js](https://mithril.js.org) framework as it looke
 	- Avg. scoring time
 	- Preferred pickup style
 	- Fastest pickup style
+### Issues:
+- [ ] Match list only loads on save
+- [ ] Inputed values aren't cleared on load
+- [ ] Lists aren't loaded on page load
 
 ## Pipeline
 ### Encode
