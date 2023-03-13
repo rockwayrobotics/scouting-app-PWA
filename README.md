@@ -19,13 +19,13 @@ This app is using the [Mithril.js](https://mithril.js.org) framework as it looke
 	- Fastest pickup style
 ### Issues:
 - [x] Match list only loads on save
-- [x] Inputed values aren't cleared on load
+- [ ] Inputed values aren't cleared on load
 - [ ] Load buttons must be pressed twice to reset placeholders
 - [ ] Lists aren't loaded on page load
 
 ## Pipeline
 ### Encode
-`Object -> Byte String -> LZW Compression -> String -> QR Code`
+`Object -> Byte String -> LZW Compression -> Byte Array -> Byte String -> QR Code`
 ### Decode
 `QR Code -> String -> LZW Decompression -> Byte String -> Dictionary`
 ### Data Transfer

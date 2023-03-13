@@ -80,15 +80,19 @@ var Team = {
 
 	qr() {
 		// gzip data
-		let binary = convertObjectToBinary(Team);
-		let compressed = bin2String(LZW.compress(binary));
-		console.info(binary);
-		console.info(compressed);
+		console.log(Team);
+		var b_str = convertObjectToBinary(Team);
+		console.log(b_str);
+		var compressed = LZW.compress(b_str);
+		console.log(compressed);
+		var c_str = String.fromCharCode(...compressed);
+		console.log(c_str);
+
 		// generate QR code image
 		let qrcodeContainer = document.getElementById("qrcode");
 		qrcodeContainer.style = "";
 		qrcodeContainer.innerHTML = "";
-		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
+		new QRCode(qrcodeContainer, {text:c_str,correctLevel:QRCode.CorrectLevel.L});
 	},
 	
 	async reset() {
