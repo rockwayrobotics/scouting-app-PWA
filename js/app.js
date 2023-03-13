@@ -210,6 +210,7 @@ const State = () => ({ match: Match, team: Team, load_id: 0, teams_list: [], mat
 const Actions = state => ({
 	reset: async function() {
 		await Team.list();
+		await Match.list();
 		await Match.reset();
 		await Team.reset();
 		window.location.href = "#!/scout/pit";
@@ -303,7 +304,6 @@ var selectBlock = {
 			m("label.label", vnode.attrs.label),
 			m("select.input[name="+vnode.attrs.id+"][id="+vnode.attrs.id+"]",
 				{
-					value: state[vnode.attrs.vars[0]],
 					oninput: function(e) {
 						if (vnode.attrs.vars.length == 1) {
 							state[vnode.attrs.vars[0]] = e.target.value;

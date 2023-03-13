@@ -18,8 +18,9 @@ This app is using the [Mithril.js](https://mithril.js.org) framework as it looke
 	- Preferred pickup style
 	- Fastest pickup style
 ### Issues:
-- [ ] Match list only loads on save
-- [ ] Inputed values aren't cleared on load
+- [x] Match list only loads on save
+- [x] Inputed values aren't cleared on load
+- [ ] Load buttons must be pressed twice to reset placeholders
 - [ ] Lists aren't loaded on page load
 
 ## Pipeline
