@@ -13,6 +13,17 @@ db.version(1).stores({
 });
 
 // Functions
+let vals = [];
+const loopNestedObj = obj => {
+	Object.keys(obj).forEach(key => {
+		if (obj[key] && typeof obj[key] === "object") loopNestedObj(obj[key]); // recurse.
+		else {
+			vals.push([key, obj[key]]); // or do something with key and val.
+		}
+	});
+	return vals;
+};
+
 function convertObjectToBinary(obj) {
     let output = '',
         input = JSON.stringify(obj) // convert the json to string.
@@ -79,11 +90,25 @@ var Team = {
 	},
 
 	qr() {
-		// gzip data
-		console.log(Team);
-		var b_str = convertObjectToBinary(Team);
-		console.log(b_str);
-		var compressed = LZW.compress(b_str);
+		var vals = loopNestedObj(Team);
+		var concat = "";
+		for (i in vals) {
+			if (Number.isInteger(vals[i])) {
+				vals[i] = vals[i].toString(16);
+			} else if (typeof vals[i] == "boolean") {
+				vals[i] = vals[i] ? 1 : 0;
+			}
+
+			if (i == 0) {
+				concat += vals[i];
+			} else if (i <= 5) {
+				concat += ";" + vals[i];
+			}
+		}
+		console.log(concat);
+
+		// compress data
+		var compressed = LZW.compress(concat);
 		console.log(compressed);
 		var c_str = String.fromCharCode(...compressed);
 		console.log(c_str);
@@ -107,7 +132,7 @@ var Team = {
 var Match = {
 	number: 0,
 	linked_team: 0,
-	linked_event: "",
+	linked_event: "X",
 	alliance: "blue",
 	auto: {
 		balance: false,
@@ -119,15 +144,15 @@ var Match = {
 	endgame: {
 		parked: false,
 		score: 0,
-		time: 0,
+		time: "X",
 	},
 	penalty: 0,
 	disabled: false,
 
 	alliance_final_score: 0,
-	cycle_time: 0,
-	pickup_time: 0,
-	comments: "",
+	cycle_time: "X",
+	pickup_time: "X",
+	comments: "X",
 
 	async load(number) {
 		var new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
@@ -179,33 +204,67 @@ var Match = {
 	},
 
 	qr() {
-		// gzip data
-		let binary = convertObjectToBinary(Match);
-		let compressed = bin2String(LZW.compress(binary));
+		var vals = loopNestedObj(Match);
+		var concat_arr = [];
+		var concat = "";
+		for (i in vals) {
+			var k = vals[i][0];
+			console.log(k);
+			var v = vals[i][1];
+			switch (k) {
+				case "number": concat_arr[0] = v.toString(16); break;
+				case "linked_team": concat_arr[1] = v.toString(16); break;
+				case "linked_event": concat_arr[2] = v; break;
+				case "alliance": concat_arr[3] = v; break;
+				case "balance": concat_arr[4] = v ? 1 : 0; break;
+				case "move": concat_arr[5] = v ? 1 : 0; break;
+				case "teleop": concat_arr[6] = v ? 1 : 0; break;
+				case "parked": concat_arr[7] = v ? 1 : 0; break;
+				case "score": concat_arr[8] = v.toString(16); break;
+				case "time": concat_arr[9] = v; break;
+				case "penalty": concat_arr[10] = v.toString(16); break;
+				case "disabled": concat_arr[11] = v ? 1 : 0; break;
+				case "alliance_final_score": concat_arr[12] = v.toString(16); break;
+			};
+		}
+
+		for (i in concat_arr) {
+			if (i == 0) {
+				concat += concat_arr[i];
+			} else {
+				concat += ";" + concat_arr[i];
+			}
+		}
+		console.log(concat);
+
+		// compress data
+		var compressed = LZW.compress(concat);
+		var c_str = String.fromCharCode(...compressed);
+
 		// generate QR code image
 		let qrcodeContainer = document.getElementById("qrcode");
 		qrcodeContainer.style = "";
 		qrcodeContainer.innerHTML = "";
-		new QRCode(qrcodeContainer, {text:compressed,correctLevel:QRCode.CorrectLevel.L});
+		new QRCode(qrcodeContainer, {text:c_str,correctLevel:QRCode.CorrectLevel.L});
 	},
 
 	async reset() {
 		Match.number=0;
 		Match.linked_team=0;
-		Match.linked_event="";
+		Match.linked_event="X";
 		Match.alliance="blue";
 		Match.auto.balance=false;
 		Match.auto.move=false;
 		Match.teleop.balance=false;
 		Match.endgame.parked=false;
 		Match.endgame.score=0;
-		Match.endgame.time="";
+		Match.endgame.time="X";
 		Match.penalty.penalty=0;
 		Match.penalty.disabled=false;
 		Match.alliance_final_score=0;
-		Match.cycle_time="";
-		Match.pickup_time="";
-		Match.comments="";
+		Match.cycle_time="X";
+		Match.pickup_time="X";
+		Match.comments="X";
 	}
 }
 
