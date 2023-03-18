@@ -13,8 +13,8 @@ db.version(1).stores({
 });
 
 // Functions
-let vals = [];
 const loopNestedObj = obj => {
+	let vals = [];
 	Object.keys(obj).forEach(key => {
 		if (obj[key] && typeof obj[key] === "object") loopNestedObj(obj[key]); // recurse.
 		else {
@@ -99,27 +99,33 @@ var Team = {
 
 	qr() {
 		var vals = loopNestedObj(state.team);
+		var concat_arr = [];
 		var concat = "";
 		for (i in vals) {
-			if (Number.isInteger(vals[i])) {
-				vals[i] = vals[i].toString(16);
-			} else if (typeof vals[i] == "boolean") {
-				vals[i] = vals[i] ? 1 : 0;
-			}
+			var k = vals[i][0];
+			var v = vals[i][1];
+			switch (k) {
+				case "number": concat_arr[0] = v.toString(16); break;
+				case "name": concat_arr[1] = v; break;
+				case "width": concat_arr[2] = v; break;
+				case "autos": concat_arr[3] = v; break;
+				case "swerve": concat_arr[4] = v ? 1 : 0; break;
+				case "tippy": concat_arr[5] = v ? 1 : 0; break;
+			};
+		}
 
+		for (i in concat_arr) {
 			if (i == 0) {
-				concat += vals[i];
-			} else if (i <= 5) {
-				concat += ";" + vals[i];
+				concat += concat_arr[i];
+			} else {
+				concat += ";" + concat_arr[i];
 			}
 		}
 		console.log(concat);
 
 		// compress data
 		var compressed = LZW.compress(concat);
-		console.log(compressed);
 		var c_str = String.fromCharCode(...compressed);
-		console.log(c_str);
 
 		// generate QR code image
 		let qrcodeContainer = document.getElementById("qrcode");
@@ -132,7 +138,7 @@ var Team = {
 var Match = {
 	number: 0,
 	linked_team: 0,
-	linked_event: "X",
+	linked_event: "",
 	alliance: "blue",
 	auto: {
 		balance: false,
@@ -144,15 +150,15 @@ var Match = {
 	endgame: {
 		parked: false,
 		score: 0,
-		time: "X",
+		time: 0,
 	},
 	penalty: 0,
 	disabled: false,
 
 	alliance_final_score: 0,
-	cycle_time: "X",
-	pickup_time: "X",
-	comments: "X",
+	cycle_time: 0,
+	pickup_time: 0,
+	comments: "",
 
 	async load(number) {
 		var new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
