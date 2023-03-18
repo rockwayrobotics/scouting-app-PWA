@@ -159,6 +159,7 @@ var Match = {
 		Match.number = new_match.match_number;
 		Match.linked_team = new_match.linked_team;
 		Match.linked_event = new_match.linked_event;
+		Match.recorded_time = new_match.recorded_time;
 		Match.alliance = new_match.alliance;
 		Match.auto.balance = new_match.auto_balance;
 		Match.auto.move = new_match.auto_move;
@@ -175,12 +176,11 @@ var Match = {
 	},
 
 	async save() {
-		let d = new Date();
 		await db.matches.put({
 			match_number: parseInt(Match.number),
 			linked_team: parseInt(Match.linked_team),
 			linked_event: Match.linked_event,
-			recorded_time: d.getTime(),
+			recorded_time: Math.floor(Date.now() / 1000),
 			alliance: Match.alliance,
 			auto_balance: Match.auto.balance,
 			auto_move: Match.auto.move,
@@ -209,7 +209,6 @@ var Match = {
 		var concat = "";
 		for (i in vals) {
 			var k = vals[i][0];
-			console.log(k);
 			var v = vals[i][1];
 			switch (k) {
 				case "number": concat_arr[0] = v.toString(16); break;
@@ -225,6 +224,8 @@ var Match = {
 				case "penalty": concat_arr[10] = v.toString(16); break;
 				case "disabled": concat_arr[11] = v ? 1 : 0; break;
 				case "alliance_final_score": concat_arr[12] = v.toString(16); break;
+				case "comments": concat_arr[13] = v; break;
+				case "recorded_time": concat_arr[14] = v.toString(16); break;
 			};
 		}
 
