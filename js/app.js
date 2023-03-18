@@ -87,6 +87,9 @@ var Team = {
 		document.getElementById('swerve').checked = actions.get(["team","swerve"]);
 		state.team.tippy = new_team.tippy;
 		document.getElementById('tippy').value = actions.get(["team","tippy"]);
+
+
+		window.location.href = "#!/reset/pit";
 	},
 
 	async list() {
@@ -182,6 +185,8 @@ var Match = {
 		state.match.pickup_time = new_match.pickup_time;
 		state.match.comments = new_match.comments;
 		document.getElementById('comments').value = null;
+
+		window.location.href = "#!/reset/match";
 	},
 
 	async save() {
@@ -262,12 +267,18 @@ var Match = {
 // State
 const State = () => ({ match: Match, team: Team, load_id: 0, teams_list: [], matches_list: [] });
 const Actions = state => ({
-	reset: async function() {
+	async reset(page) {
 		await Team.list();
 		await Match.list();
 		state.team = Team;
 		state.match = Match;
-		window.location.href = "#!/scout/pit";
+
+		if (page == "pit") {
+			window.location.href = "#!/scout/pit";
+		} else if (page == "match") {
+			window.location.href = "#!/scout/match";
+		}
+
 	},
 	get: function(vars) {
 		if (vars.length == 2) {
@@ -288,7 +299,7 @@ var NavBar = {
 	view: function() {
 		return m("nav",
 			m("ul",
-				m("li", m("a", { class: "button", id: "del", href: "#!/reset" }, "Reset" )),
+				m("li", m("a", { class: "button", id: "del", href: "#!/reset/match" }, "Reset" )),
 				m("li", m("a", { class: "button", href: "#!/scout/pit" }, "Pit Scout" )),
 				m("li", m("a", { class: "button", href: "#!/scout/match" }, "Match Scout" )),
 				m("li", m("a", { class: "button", href: "#!/driver" }, "Driver Meeting" ))
@@ -382,14 +393,19 @@ var Splash = {
 		state.team.list();
 		state.match.list();
         return m("div", { class: "center" },
-			m("a", { class: "button", href: "#!/reset"}, "Start Scouting!")
+			m("a", { class: "button", href: "#!/reset/pit"}, "Start Scouting!")
 		)
 	}
 }
 
-var Reset = {
+var ResetPit = {
 	view: function() {
-		actions.reset();
+		actions.reset("pit");
+	}
+}
+var ResetMatch = {
+	view: function() {
+		actions.reset("match");
 	}
 }
 
@@ -599,7 +615,8 @@ var DriverMeeting = {
 
 m.route(root, "/splash", {
     "/splash": Splash,
-	"/reset": Reset,
+	"/reset/pit": ResetPit,
+	"/reset/match": ResetMatch,
 	"/scout/pit": ScoutPit,
 	"/scout/match": ScoutMatch,
 	"/driver": DriverMeeting,
