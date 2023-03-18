@@ -63,25 +63,30 @@ var Team = {
 
 	async save() {
 		await db.teams.put({
-			number: parseInt(Team.number),
-			name: Team.name,
-			width: parseFloat(Team.width),
-			autos: Team.autos,
-			swerve: Team.swerve,
-			tippy: Team.tippy,
+			number: parseInt(state.team.number),
+			name: state.team.name,
+			width: parseFloat(state.team.width),
+			autos: state.team.autos,
+			swerve: state.team.swerve,
+			tippy: state.team.tippy,
 		});
 		await Team.list();
 	},
 
 	async load(id) {
 		var new_team = await db.teams.where('number').equals(parseInt(id)).first();
-		Team.number = new_team.number;
-		Team.name = new_team.name;
-		Team.width = new_team.width;
-		Team.autos = new_team.autos;
-		Team.swerve = new_team.swerve;
-		Team.tippy = new_team.tippy;
-
+		state.team.number = new_team.number;
+		document.getElementById('number').value = null;
+		state.team.name = new_team.name;
+		document.getElementById('name').value = null;
+		state.team.width = new_team.width;
+		document.getElementById('width').value = null;
+		state.team.autos = new_team.autos;
+		document.getElementById('autos').value = null;
+		state.team.swerve = new_team.swerve;
+		document.getElementById('swerve').checked = actions.get(["team","swerve"]);
+		state.team.tippy = new_team.tippy;
+		document.getElementById('tippy').value = actions.get(["team","tippy"]);
 	},
 
 	async list() {
@@ -90,7 +95,7 @@ var Team = {
 	},
 
 	qr() {
-		var vals = loopNestedObj(Team);
+		var vals = loopNestedObj(state.team);
 		var concat = "";
 		for (i in vals) {
 			if (Number.isInteger(vals[i])) {
@@ -119,14 +124,6 @@ var Team = {
 		qrcodeContainer.innerHTML = "";
 		new QRCode(qrcodeContainer, {text:c_str,correctLevel:QRCode.CorrectLevel.L});
 	},
-	
-	async reset() {
-		Team.number=0;
-		Team.width=0.0;
-		Team.swerve=false;
-		Team.tippy=false;
-		Team.autos="";
-	}
 }
 
 var Match = {
@@ -156,46 +153,58 @@ var Match = {
 
 	async load(number) {
 		var new_match = await db.matches.where('match_number').equals(parseInt(number)).first();
-		Match.number = new_match.match_number;
-		Match.linked_team = new_match.linked_team;
-		Match.linked_event = new_match.linked_event;
-		Match.recorded_time = new_match.recorded_time;
-		Match.alliance = new_match.alliance;
-		Match.auto.balance = new_match.auto_balance;
-		Match.auto.move = new_match.auto_move;
-		Match.teleop = new_match.teleop_balance;
-		Match.endgame.parked = new_match.parked;
-		Match.endgame.score = new_match.endgame_score;
-		Match.endgame.time = new_match.endgame_time;
-		Match.penalty = new_match.penalty;
-		Match.disabled = new_match.disabled;
-		Match.alliance_final_score = new_match.alliance_final_score;
-		Match.cycle_time = new_match.cycle_time;
-		Match.pickup_time = new_match.pickup_time;
-		Match.comments = new_match.comments;
+		state.match.number = new_match.match_number;
+		document.getElementById('number').value = null;
+		state.match.linked_team = new_match.linked_team;
+		document.getElementById('teams').value = null;
+		state.match.linked_event = new_match.linked_event;
+		document.getElementById('linked_event').value = null;
+		state.match.recorded_time = new_match.recorded_time;
+		state.match.alliance = new_match.alliance;
+		state.match.auto.balance = new_match.auto_balance;
+		document.getElementById('balance').checked = actions.get(['match', 'auto', 'balance']);
+		state.match.auto.move = new_match.auto_move;
+		document.getElementById('move').checked = actions.get(['match', 'auto', 'move']);
+		state.match.teleop.balance = new_match.teleop_balance;
+		document.getElementById('t_balance').checked = actions.get(['match', 'teleop', 'balance']);
+		state.match.endgame.parked = new_match.parked;
+		document.getElementById('park').checked = actions.get(['match', 'endgame', 'parked']);
+		state.match.endgame.score = new_match.endgame_score;
+		document.getElementById('score').value = null;
+		state.match.endgame.time = new_match.endgame_time;
+		state.match.penalty = new_match.penalty;
+		document.getElementById('penalty').value = null;
+		state.match.disabled = new_match.disabled;
+		document.getElementById('disabled').checked = false;
+		state.match.alliance_final_score = new_match.alliance_final_score;
+		document.getElementById('final_score').value = null;
+		state.match.cycle_time = new_match.cycle_time;
+		state.match.pickup_time = new_match.pickup_time;
+		state.match.comments = new_match.comments;
+		document.getElementById('comments').value = null;
 	},
 
 	async save() {
 		await db.matches.put({
-			match_number: parseInt(Match.number),
-			linked_team: parseInt(Match.linked_team),
-			linked_event: Match.linked_event,
+			match_number: parseInt(state.match.number),
+			linked_team: parseInt(state.match.linked_team),
+			linked_event: state.match.linked_event,
 			recorded_time: Math.floor(Date.now() / 1000),
-			alliance: Match.alliance,
-			auto_balance: Match.auto.balance,
-			auto_move: Match.auto.move,
-			teleop_balance: Match.teleop.balance,
-			parked: Match.endgame.parked,
-			endgame_score: Match.endgame.score,
-			endgame_time: Match.endgame.time,
-			penalty: Match.penalty,
-			disabled: Match.disabled,
-			alliance_final_score: Match.alliance_final_score,
-			cycle_time: Match.cycle_time,
-			pickup_time: Match.pickup_time,
-			scouter_comments: Match.comments,
+			alliance: state.match.alliance,
+			auto_balance: state.match.auto.balance,
+			auto_move: state.match.auto.move,
+			teleop_balance: state.match.teleop.balance,
+			parked: state.match.endgame.parked,
+			endgame_score: state.match.endgame.score,
+			endgame_time: state.match.endgame.time,
+			penalty: state.match.penalty,
+			disabled: state.match.disabled,
+			alliance_final_score: state.match.alliance_final_score,
+			cycle_time: state.match.cycle_time,
+			pickup_time: state.match.pickup_time,
+			scouter_comments: state.match.comments,
 		});
-		await Match.list();
+		await state.match.list();
 	},
 
 	async list() {
@@ -204,7 +213,7 @@ var Match = {
 	},
 
 	qr() {
-		var vals = loopNestedObj(Match);
+		var vals = loopNestedObj(state.match);
 		var concat_arr = [];
 		var concat = "";
 		for (i in vals) {
@@ -248,25 +257,6 @@ var Match = {
 		qrcodeContainer.innerHTML = "";
 		new QRCode(qrcodeContainer, {text:c_str,correctLevel:QRCode.CorrectLevel.L});
 	},
-
-	async reset() {
-		Match.number=0;
-		Match.linked_team=0;
-		Match.linked_event="X";
-		Match.alliance="blue";
-		Match.auto.balance=false;
-		Match.auto.move=false;
-		Match.teleop.balance=false;
-		Match.endgame.parked=false;
-		Match.endgame.score=0;
-		Match.endgame.time="X";
-		Match.penalty.penalty=0;
-		Match.penalty.disabled=false;
-		Match.alliance_final_score=0;
-		Match.cycle_time="X";
-		Match.pickup_time="X";
-		Match.comments="X";
-	}
 }
 
 // State
@@ -275,8 +265,8 @@ const Actions = state => ({
 	reset: async function() {
 		await Team.list();
 		await Match.list();
-		await Match.reset();
-		await Team.reset();
+		state.team = Team;
+		state.match = Match;
 		window.location.href = "#!/scout/pit";
 	},
 	get: function(vars) {
@@ -316,7 +306,7 @@ var inputBlock = {
 	view: function(vnode) {
 		return m("div", { class: "formBlock" },
 			m("label.label", vnode.attrs.label),
-			m("input.input[type="+vnode.attrs.type+"][placeholder="+actions.get(vnode.attrs.vars)+"]",
+			m("input.input[type="+vnode.attrs.type+"][placeholder="+actions.get(vnode.attrs.vars)+"][id="+vnode.attrs.id+"]",
 				{
 					oninput: function(e) {
 						if (vnode.attrs.vars.length == 2) {
@@ -335,7 +325,7 @@ var checkBlock = {
 	view: function(vnode) {
 		return m("div", { class: "formBlock" },
 			m("label.label", vnode.attrs.label),
-			m("input.input[type=checkbox]",
+			m("input.input[type=checkbox][id="+vnode.attrs.id+"]",
 				{
 					checked: actions.get(vnode.attrs.vars),
 					onready: function(e){ e.target.checked = actions.get(vnode.attrs.vars); },
@@ -355,14 +345,18 @@ var checkBlock = {
 var selectBlock = {
 	view: function(vnode) {
 		let options = [];
+		options.push(m("option", { value: "" }, ""));
 		if (vnode.attrs.id == "teams") {
 			for (i in state.teams_list) {
 				options.push(m("option", { value: state.teams_list[i].number }, state.teams_list[i].number ));
 			};
-		} else {
+		} else if (vnode.attrs.id == "matches") {
 			for (i in state.matches_list) {
 				options.push(m("option", { value: state.matches_list[i].match_number }, state.matches_list[i].match_number ));
 			};
+		} else if (vnode.attrs.id == "alliance") {
+			options.push(m("option", { value: "blue" }, "Blue"));
+			options.push(m("option", { value: "red" }, "Red"));
 		}
 		return m("div", { class: "formBlock" },
 			m("label.label", vnode.attrs.label),
@@ -385,8 +379,8 @@ var selectBlock = {
 // Views`
 var Splash = {
     view: function() {
-		Team.list();
-		Match.list();
+		state.team.list();
+		state.match.list();
         return m("div", { class: "center" },
 			m("a", { class: "button", href: "#!/reset"}, "Start Scouting!")
 		)
@@ -412,6 +406,7 @@ var ScoutMatch = {
 				},
 					m(inputBlock, {
 						label: "Match Number:",
+						id: "number",
 						type: "number",
 						vars: ['match', 'number'],
 					}),
@@ -420,49 +415,64 @@ var ScoutMatch = {
 						id: "teams",
 						vars: ['match', 'linked_team'],
 					}),
+					m(selectBlock, {
+						label: "Alliance",
+						id: "alliance",
+						vars: ['match', 'alliance'],
+					}),
 					m(inputBlock, {
 						label: "Event Code:",
+						id: "linked_event",
 						type: "text",
 						vars: ['match', 'linked_event'],
 					}),
 					m(checkBlock, {
 						label: "Can they balance in Auto?",
+						id: "balance",
 						vars: ['match', 'auto', 'balance'],
 					}),
 					m(checkBlock, {
 						label: "Did they move in Auto?",
+						id: "move",
 						vars: ['match', 'auto', 'move'],
 					}),
 					m(checkBlock, {
 						label: "Can they balance in Teleop?",
+						id: "t_balance",
 						obj: "match",
 						vars: ['match', 'teleop', 'balance'],
 					}),
 					m(checkBlock, {
 						label: "Did they park in the Endgame?",
+						id: "park",
 						vars: ['match', 'endgame', 'parked'],
 					}),
 					m(inputBlock, {
 						label: "Endgame Score:",
+						id: "score",
 						type: "number",
 						vars: ['match', 'endgame', 'score'],
 					}),
 					m(inputBlock, {
 						label: "Penalties:",
+						id: "penalty",
 						type: "number",
 						vars: ['match', 'penalty'],
 					}),
 					m(checkBlock, {
 						label: "Were they disabled?",
+						id: "disabled",
 						vars: ['match', 'disabled'],
 					}),
 					m(inputBlock, {
 						label: "Alliance Final Score:",
+						id: "final_score",
 						type: "number",
 						vars: ['match', 'alliance_final_score'],
 					}),
 					m(inputBlock, {
 						label: "Misc. Comments:",
+						id: "comments",
 						type: "text",
 						vars: ['match', 'comments'],
 					}),
@@ -471,20 +481,20 @@ var ScoutMatch = {
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
 						onclick: async function() {
-							await Match.save();
+							await state.match.save();
 						}
 					}, "Save"),
 					m("button.button", {
 						onclick: function() {
 							document.getElementById("qrcode").style = "";
-							Match.qr();
+							state.match.qr();
 						}
 					},"Show QR")
 				),
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
 						onclick: function() {
-							Match.load(state.load_id);
+							state.match.load(state.load_id);
 						}
 					}, "Load Match"),
 					m(selectBlock, {
@@ -511,29 +521,35 @@ var ScoutPit = {
 				},
 					m(inputBlock, {
 						label: "Team #:",
+						id: "number",
 						type: "number",
 						vars: ['team', 'number'],
 					}),
 					m(inputBlock, {
 						label: "Team Name:",
+						id: "name",
 						type: "text",
 						vars: ['team', 'name'],
 					}),
 					m(inputBlock, {
 						label: "Robot Width (in):",
+						id: "width",
 						type: "number",
 						vars: ['team', 'width'],
 					}),
 					m(checkBlock, {
 						label: "Do they have Swerve Drive?",
+						id: "swerve",
 						vars: ['team', 'swerve'],
 					}),
 					m(checkBlock, {
 						label: "Are they tippy?",
+						id: "tippy",
 						vars: ['team', 'tippy'],
 					}),
 					m(inputBlock, {
 						label: "Short Description of Autos:",
+						id: "autos",
 						type: "text",
 						vars: ['team', 'autos'],
 					}),
@@ -542,20 +558,20 @@ var ScoutPit = {
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
 						onclick: async function() {
-							await Team.save();
+							await state.team.save();
 						}
 					}, "Save"),
 					m("button.button", {
 						onclick: function() {
 							document.getElementById("qrcode").style = "";
-							Team.qr();
+							state.team.qr();
 						}
 					},"Show QR")
 				),
 				m("div", { class: "formBlock", id: "bottom" },
 					m("button.button[id=ok]", {
 						onclick: function() {
-							Team.load(state.load_id);
+							state.team.load(state.load_id);
 						}
 					}, "Load Team"),
 					m(selectBlock, {
