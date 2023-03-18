@@ -13,8 +13,15 @@ db.version(1).stores({
 });
 
 // Functions
+function alliance(str) {
+	switch (str) {
+		case "blue": return "B";
+		case "red": return "R";
+	}
+}
+
+let vals = [];
 const loopNestedObj = obj => {
-	let vals = [];
 	Object.keys(obj).forEach(key => {
 		if (obj[key] && typeof obj[key] === "object") loopNestedObj(obj[key]); // recurse.
 		else {
@@ -146,6 +153,7 @@ var Match = {
 	},
 	teleop: {
 		balance: false,
+		scored: [],
 	},
 	endgame: {
 		parked: false,
@@ -176,6 +184,8 @@ var Match = {
 		document.getElementById('move').checked = actions.get(['match', 'auto', 'move']);
 		state.match.teleop.balance = new_match.teleop_balance;
 		document.getElementById('t_balance').checked = actions.get(['match', 'teleop', 'balance']);
+		state.match.teleop.scored = new_match.teleop_scored;
+		document.getElementById('t_scored').checked = actions.get(['match', 'teleop', 'scored']);
 		state.match.endgame.parked = new_match.parked;
 		document.getElementById('park').checked = actions.get(['match', 'endgame', 'parked']);
 		state.match.endgame.score = new_match.endgame_score;
@@ -205,6 +215,7 @@ var Match = {
 			auto_balance: state.match.auto.balance,
 			auto_move: state.match.auto.move,
 			teleop_balance: state.match.teleop.balance,
+			teleop_scored: state.match.teleop.scored,
 			parked: state.match.endgame.parked,
 			endgame_score: state.match.endgame.score,
 			endgame_time: state.match.endgame.time,
@@ -229,24 +240,58 @@ var Match = {
 		var concat = "";
 		for (i in vals) {
 			var k = vals[i][0];
+			console.log(k);
 			var v = vals[i][1];
 			switch (k) {
-				case "number": concat_arr[0] = v.toString(16); break;
-				case "linked_team": concat_arr[1] = v.toString(16); break;
-				case "linked_event": concat_arr[2] = v; break;
-				case "alliance": concat_arr[3] = v; break;
-				case "balance": concat_arr[4] = v ? 1 : 0; break;
-				case "move": concat_arr[5] = v ? 1 : 0; break;
-				case "teleop": concat_arr[6] = v ? 1 : 0; break;
-				case "parked": concat_arr[7] = v ? 1 : 0; break;
-				case "score": concat_arr[8] = v.toString(16); break;
-				case "time": concat_arr[9] = v; break;
-				case "penalty": concat_arr[10] = v.toString(16); break;
-				case "disabled": concat_arr[11] = v ? 1 : 0; break;
-				case "alliance_final_score": concat_arr[12] = v.toString(16); break;
-				case "comments": concat_arr[13] = v; break;
-				case "recorded_time": concat_arr[14] = v.toString(16); break;
-			};
+				case "number":
+					concat_arr[0] = v.toString(16);
+					break;
+				case "linked_team":
+					concat_arr[1] = v.toString(16);
+					break;
+				case "linked_event":
+					concat_arr[2] = v;
+					break;
+				case "alliance":
+					concat_arr[3] = alliance(v);
+					break;
+				case "balance":
+					concat_arr[4] = v ? 1 : 0;
+					break;
+				case "move":
+					concat_arr[5] = v ? 1 : 0;
+					break;
+				case "balance":
+					concat_arr[6] = v ? 1 : 0;
+					break;
+				case "parked":
+					concat_arr[7] = v ? 1 : 0;
+					break;
+				case "score":
+					concat_arr[8] = v.toString(16);
+					break;
+				case "time":
+					concat_arr[9] = v;
+					break;
+				case "penalty":
+					concat_arr[10] = v.toString(16);
+					break;
+				case "disabled":
+					concat_arr[11] = v ? 1 : 0;
+					break;
+				case "alliance_final_score":
+					concat_arr[12] = v.toString(16);
+					break;
+				case "comments":
+					concat_arr[13] = v;
+					break;
+				case "recorded_time":
+					concat_arr[14] = v.toString(16);
+					break;
+				case "scored":
+					concat_arr[15] = v; console.log(v);
+					break;
+			}
 		}
 
 		for (i in concat_arr) {

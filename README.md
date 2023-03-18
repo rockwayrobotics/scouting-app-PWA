@@ -21,4 +21,4 @@ This app is using the [Mithril.js](https://mithril.js.org) framework as it looke
 - [x] Can't set linked team for match
 - [x] Inputed values aren't cleared on load
 - [x] Load buttons must be pressed twice to reset placeholders
-- [ ] Lists aren't loaded on page load
+- [x] Lists aren't loaded on page load
